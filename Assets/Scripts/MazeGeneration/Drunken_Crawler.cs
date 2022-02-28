@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crawler : Maze
+public class Drunken_Crawler : Maze_Base
 {
 	[SerializeField] int drunkards = 1;
 

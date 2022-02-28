@@ -5,9 +5,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+	// Player Acceleration, or Force applied per tick
 	[SerializeField] float playerAcceleration = 5f;
+	// Players Max Speed in Velocity Magnitude
 	[SerializeField] float playerMaxSpeed = 5f;
 	Rigidbody rb;
+	// Movement delta, or change in movement from Input
 	Vector3 movementDelta;
 
 	private void Start()
@@ -15,13 +18,21 @@ public class PlayerMovement : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 	}
 
-	public void Move(InputAction.CallbackContext context)
+	public void OnMove(InputAction.CallbackContext context)
 	{
 		Vector2 input = context.action.ReadValue<Vector2>();
 		movementDelta = new Vector3(input.x, 0, input.y);
 	}
 
-	private void Update()
+	private void FixedUpdate()
+	{
+		ApplyMoveForce();
+
+		// Clamp velocity
+		rb.velocity = Vector3.ClampMagnitude(rb.velocity, playerMaxSpeed);
+	}
+
+	private void ApplyMoveForce()
 	{
 		Vector3 moveVector;
 		if (movementDelta.magnitude > 1)
@@ -29,8 +40,5 @@ public class PlayerMovement : MonoBehaviour
 		else
 			moveVector = movementDelta * Time.deltaTime * playerAcceleration;
 		rb.AddRelativeForce(moveVector);
-
-		// Clamp velocity
-		rb.velocity = Vector3.ClampMagnitude(rb.velocity, playerMaxSpeed);
 	}
 }

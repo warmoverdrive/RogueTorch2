@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MapLocation
 {
+
+
 	public int x, z;
 
 	public MapLocation(int _x, int _z)
@@ -13,19 +15,29 @@ public class MapLocation
 	}
 }
 
-public class Maze : MonoBehaviour
+public class Maze_Base : MonoBehaviour
 {
 	[SerializeField] protected int width = 30; // x
 	[SerializeField] protected int depth = 30; // z
 	[SerializeField] int scale = 6;
 	protected byte[,] map;
+	protected List<MapLocation> directions = new List<MapLocation>(){
+		new MapLocation(1,0),
+		new MapLocation(0,1),
+		new MapLocation(-1,0),
+		new MapLocation(0,-1)
+	};
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		var startTime = Time.realtimeSinceStartup;
+
 		InitializeMap();
 		Generate();
 		RenderMap();
+
+		Debug.Log("Time to Generate: " + (Time.realtimeSinceStartup - startTime));
 	}
 
 	private void RenderMap()
